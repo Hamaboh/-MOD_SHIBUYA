@@ -86,6 +86,9 @@ footer a{color:var(--k)}
 @media(max-width:560px){.post{grid-template-columns:52px 1fr;gap:10px}.topics{padding:16px 16px 18px;box-shadow:5px 5px 0 var(--y)}}
 `.replace(/^\n+/, '');
 
+  const EXTRA = '\\n.ell{color:var(--y2);font-weight:bold}\\n.badge.exc{opacity:.75}\\n.policy{border:2px solid var(--y2);border-radius:12px;padding:12px 16px;margin-top:16px;color:var(--w);font-size:13px;line-height:1.8}\\n.policy b{color:var(--y)}\\n';
+  const POLICY = '<div class="policy"><b>掲載方針</b><br>本ページの主たる内容は、Xの公開投稿をもとに編集者がまとめた「トピック」です。個別の投稿については、<b>主催者・出演者・参加アーティスト・協力企業などの告知投稿は告知内容をそのまま掲載</b>し、<b>それ以外の一般の投稿は冒頭の抜粋のみ</b>を掲載しています（<span class="badge exc">抜粋</span>表示）。全文は各投稿のリンク先（X）でご覧ください。画像・動画は転載していません。</div>';
+
   function generate(posts, topics, meta) {
     const items = posts.slice().sort((a, b) => (a.t < b.t ? -1 : 1));
     const byDay = {}, tByDay = {};
@@ -96,6 +99,12 @@ footer a{color:var(--k)}
     });
     topics.forEach(t => { (tByDay[t.day] = tByDay[t.day] || []).push(t); });
 
+    const OFF = new Set(['_RAY_world','__yuuaself__','moonseamao','tsumugi_3510','harune__yuki','melonchan0924','kinopo_idol','mico_kinopo','Oaiko_info','ikeshibu_tokyo','wpp_ikebe','MasahiroTOBITA','yuta_hoshi','wozniaktokyo','kazuminamba','tottemogenkiman','teradann','rin_utero','pupa_info','ami_pupa','yuino_pupa','boromaru_staff','shiawase_ito','borotchi','kozue_BRGH','uno_BRGH','BRGHead','kemta','nancy_jpn','Yava_kouteca5','ktcgf_jpn','fumiki_ymgch','hibi_undrcrrnt','apes_band','pudelhunds03','tbt_hn','yotsumototakuya','sotaro_ishida','schoollabel','masasa1to','nrn_sleep_zzz','kagjun','Total_Feedback','Gday_official','NaNoMoRaL_info','pupa11music','shinobu_shami','tower_shinjuku']);
+    const isOff = p => OFF.has(String(p.h || '').slice(1));
+    const LIM = 110, CUT = 80;
+    const body = p => { const t = String(p.x || '').trim();
+      return (isOff(p) || t.length <= LIM) ? rich(t) : rich(t.slice(0, CUT).replace(/\s+$/, '')) + '<span class="ell">…</span>'; };
+    const exb = p => (!isOff(p) && String(p.x || '').trim().length > LIM) ? '<span class="badge exc">抜粋</span>' : '';
     const badge = p => (p.m ? '<span class="badge">画像 ' + p.m + '</span>' : '') +
                        (p.v ? '<span class="badge">動画</span>' : '');
     const ph = p => {
@@ -103,8 +112,8 @@ footer a{color:var(--k)}
       const hm = ('0' + d.getUTCHours()).slice(-2) + ':' + ('0' + d.getUTCMinutes()).slice(-2);
       return '<article class="post" id="p' + p.id + '"><div class="post-time"><time datetime="' + p.t + '">' + hm +
         '</time></div><div class="post-body"><div class="post-head"><span class="pname">' + esc(p.n || '') +
-        '</span><span class="phandle">' + esc(p.h || '') + '</span>' + badge(p) + '</div><div class="ptext">' +
-        rich(p.x || '') + '</div>' + (p.q ? '<blockquote class="quote">' + rich(p.q) + '</blockquote>' : '') +
+        '</span><span class="phandle">' + esc(p.h || '') + '</span>' + badge(p) + exb(p) + '</div><div class="ptext">' +
+        body(p) + '</div>' + ((p.q && isOff(p)) ? '<blockquote class="quote">' + rich(p.q) + '</blockquote>' : '') +
         '<a class="src" href="' + p.u + '" target="_blank" rel="noopener">▸ Xの投稿を見る（一次情報）</a></div></article>';
     };
 
@@ -139,9 +148,9 @@ footer a{color:var(--k)}
       '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
       '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
       '<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Kosugi+Maru&display=swap" rel="stylesheet">\n' +
-      '<style>\n' + CSS + '</style>\n</head>\n<body>\n' +
+      '<style>\n' + CSS + EXTRA + '</style>\n</head>\n<body>\n' +
       '<header class="hero"><div class="wrap"><p class="kicker">RAY presents ／ 非公式アーカイブ</p><h1>#MOD_SHIBUYA<br>発生記録</h1>' +
-      '<p class="lead">アイドル・グループ <strong>RAY</strong> が渋谷で仕掛ける1週間ぶっ通しのカルチャー・イベント「#MOD_SHIBUYA」。現地にいない人にも「いま何が起きているのか」が分かるように、Xに投稿された <strong>#MOD_SHIBUYA</strong> の記録を時系列で並べたページです。各トピックと各投稿には、一次情報であるXの投稿へのリンクを付けています。</p>' +
+      '<p class="lead">アイドル・グループ <strong>RAY</strong> が渋谷で仕掛ける1週間ぶっ通しのカルチャー・イベント「#MOD_SHIBUYA」。現地にいない人にも「いま何が起きているのか」が分かるように、Xに投稿された <strong>#MOD_SHIBUYA</strong> の記録を時系列で並べたページです。各トピックと各投稿には、一次情報であるXの投稿へのリンクを付けています。一般の方の投稿は抜粋のみを掲載しています。</p>' +
       '<div class="hero-meta"><span class="chip">2026.9.8 TUE – 9.14 MON</span><span class="chip">OPENBASE SHIBUYA</span><span class="chip">入場無料・投げ銭歓迎</span><span class="chip">最終更新 ' + U + ' JST</span><span class="chip">収集 ' + C + ' 投稿</span></div></div></header>' +
       '<div class="strip"><span>渋谷を M O D （改造）する ★ カルチャー的なんでもあり ★ 1週間ぶっ通し ★ 最終3日間は69時間連続 ★ 渋谷を M O D （改造）する ★ カルチャー的なんでもあり ★ 1週間ぶっ通し ★ 最終3日間は69時間連続</span></div>' +
       '<div class="wrap info"><h2>イベント概要</h2><div class="grid">' +
@@ -149,11 +158,12 @@ footer a{color:var(--k)}
       '<dl class="card"><dt>WHEN</dt><dd>9/8(火)–10(木) 11:30–23:00<br>9/11(金) 11:30–24:00<br>9/12(土)–13(日) 24時間<br>9/14(月) 00:00–08:00<br>※最終3日間は69時間ぶっ通し</dd></dl>' +
       '<dl class="card"><dt>WHERE</dt><dd>OPENBASE SHIBUYA<br>東京都渋谷区宇田川町14-13（ハンズとPARCOのあいだ／渋谷駅から徒歩5分）<br>連動企画：ワールドペダルパーク（イケシブ）渋谷区道玄坂1-7-4</dd></dl>' +
       '<dl class="card"><dt>WHO</dt><dd>RAY（内山結愛・月海まお・紬実詩・春音友希ほか。メンバーは常に誰かが在場予定）／Masahiro Tobita／星優太(WOZNIAK)／Noise(BoB).（月海まお from RAY）／石田想太朗(カラコルムの山々)／ぼっちぼろまる／BELLRING少女ハート／南波一海／寺田寛明／UTERO／ピューパ!! ほか</dd></dl>' +
-      '</div><p class="note">※このページはファンによる非公式のまとめです。掲載内容はXの公開投稿を出典としており、各項目のリンクから元の投稿を確認できます。最新・正確な情報は主催者およびRAY公式の発信をご確認ください。</p></div>' +
+      '</div><p class="note">※このページはファンによる非公式のまとめです。最新・正確な情報は主催者およびRAY公式の発信をご確認ください。</p>' + POLICY + '</div>' +
       '<nav class="nav"><div class="wrap nav-in">' + nav + '</div></nav><main class="wrap">' + secs + '</main>' +
       '<footer><div class="wrap"><p class="ft">#MOD_SHIBUYA</p><p>Xハッシュタグ <strong>#MOD_SHIBUYA</strong> の公開投稿を収集して生成した非公式アーカイブ。</p>' +
       '<p>収集タイミング：毎日 18:00 / 21:00 / 24:00 / 09:00（JST）｜収集終了：2026年9月14日(月) 09:00</p>' +
       '<p>最終更新：' + U + ' JST ／ 収集済み ' + C + ' 投稿' + (meta.coverage ? '（収集範囲：' + esc(meta.coverage) + '）' : '') + '</p>' +
+      '<p><strong>掲載の削除について</strong>：ご自身の投稿の掲載を希望されない場合は、<a href="https://github.com/Hamaboh/-MOD_SHIBUYA/issues" target="_blank" rel="noopener">GitHubのIssue</a>よりご連絡ください。確認のうえ速やかに削除します。</p>' +
       '<p>出典：各投稿のリンク先（X）、<a href="https://skream.jp/news/2026/08/ray_mod_shibuya.php" target="_blank" rel="noopener">Skream!</a>、<a href="https://www.ikebe-gakki.com/blog/202609-mod-shibuya/" target="_blank" rel="noopener">イケベ楽器店</a></p></div></footer>\n</body>\n</html>';
   }
 
