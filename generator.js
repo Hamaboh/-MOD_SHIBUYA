@@ -86,7 +86,7 @@ footer a{color:var(--k)}
 @media(max-width:560px){.post{grid-template-columns:52px 1fr;gap:10px}.topics{padding:16px 16px 18px;box-shadow:5px 5px 0 var(--y)}}
 `.replace(/^\n+/, '');
 
-  const EXTRA = '\\n.ell{color:var(--y2);font-weight:bold}\\n.badge.exc{opacity:.75}\\n.policy{border:2px solid var(--y2);border-radius:12px;padding:12px 16px;margin-top:16px;color:var(--w);font-size:13px;line-height:1.8}\\n.policy b{color:var(--y)}\\n';
+  const EXTRA = '\n.ell{color:var(--y2);font-weight:bold}\n.badge.exc{opacity:.75}\n.policy{border:2px solid var(--y2);border-radius:12px;padding:12px 16px;margin-top:16px;color:var(--w);font-size:13px;line-height:1.8}\n.policy b{color:var(--y)}\n';
   const POLICY = '<div class="policy"><b>掲載方針</b><br>本ページの主たる内容は、Xの公開投稿をもとに編集者がまとめた「トピック」です。個別の投稿については、<b>主催者・出演者・参加アーティスト・協力企業などの告知投稿は告知内容をそのまま掲載</b>し、<b>それ以外の一般の投稿は冒頭の抜粋のみ</b>を掲載しています（<span class="badge exc">抜粋</span>表示）。全文は各投稿のリンク先（X）でご覧ください。画像・動画は転載していません。</div>';
 
   function generate(posts, topics, meta) {
