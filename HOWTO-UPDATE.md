@@ -28,10 +28,13 @@ git push は使えない（セッションの git プロキシがこのリポジ
 ### 1. 既存データの取得
 
 ```
-curl -s https://raw.githubusercontent.com/Hamaboh/-MOD_SHIBUYA/main/posts.json > posts.json
-curl -s https://raw.githubusercontent.com/Hamaboh/-MOD_SHIBUYA/main/topics.json > topics.json
-curl -s https://raw.githubusercontent.com/Hamaboh/-MOD_SHIBUYA/main/generator.js > generator.js
+git clone --depth 1 https://github.com/Hamaboh/-MOD_SHIBUYA.git mod
 ```
+
+> **⚠️ 2026/9/12 追記。** セッションの egress プロキシが `raw.githubusercontent.com` と
+> `hamaboh.github.io` への CONNECT を 403 で拒否することがある（`github.com` は許可）。
+> その場合 **curl raw は使えないので `git clone` でデータを取る**。
+> 公開ページの検証も curl ではなく**ブラウザで開いて JS で数える**（手順7参照）。
 
 `posts.json` の最新 `t`（UTC）が前回の収集到達点。その数分前を `from` にする。
 
@@ -92,8 +95,20 @@ window.__p=window.__runAll(<from>,<to>,1800);   // 30分刻み
 ```
 
 進捗は `JSON.stringify({prog:window.__prog,tot:Object.keys(window.__acc).length})` で確認。
-**検証パス**として `step=600`（10分刻み）でもう一度 `__runAll` を回し、`n` が全部 0 なら取りこぼしなし。
+
+> **⚠️ 2026/9/12 追記：30分刻みだけでは取りこぼす。**
+> 背面タブが1窓あたりにレンダリングする article は **4〜6件が上限**で、
+> `__crawl` の再帰条件 `shown>=8` は**一度も発火しない**。実測で 30分刻み80件 →
+> 5分刻みで再掃引すると +9件（約11%）出た。
+> **最初から `step=300`（5分刻み）で全区間を掃引すること。**
+> `shown>=5` の窓だけ `step=100` で撃ち直す。ただし窓を100秒まで狭めると
+> X 側が何も返さなくなることがあるので、`shown:0` が並んだら**それは「0件」ではなく失敗**。
+
+`window.__sweep(start,end,step,wait)`（`__win` を順に回すだけの平坦版）で十分。
 ページ読み込みが間に合わず `shown:0` が並ぶことがある。その区間は `wait` を 6500 に上げて撃ち直す。
+連続で「問題が発生しました。再読み込みしてください。」が出たら X のレート制限なので、
+`navigate` でフルリロードしてから再開する（`window.__acc` は消えるので、
+その前に手順3でデータを取り出しておくこと）。
 
 ### 3. データの取り出し（x.com → コンテナ）
 
@@ -153,15 +168,16 @@ nat(document.querySelector('input[name="message"]'),'...');
 ### 7. 検証
 
 `git clone --depth 1` して `git ls-tree -r --long HEAD` でコミット内容を確認（raw は数分キャッシュされる）。
-そのうえで Pages を確認（反映に1分前後）。
+そのうえで Pages を確認（反映に1分前後）。**curl が 403 で通らない場合はブラウザで開いて数える。**
 
+```js
+const h=document.documentElement.outerHTML, t=document.body.innerText;
+JSON.stringify({links:(h.match(/x\.com\/[A-Za-z0-9_]*\/status\//g)||[]).length,
+ exc:(t.match(/抜粋/g)||[]).length, days:[...new Set(t.match(/DAY ?[0-9]/g)||[])],
+ policy:/掲載方針/.test(t), issues:/-MOD_SHIBUYA\/issues/.test(h)})
 ```
-curl -s -L https://hamaboh.github.io/-MOD_SHIBUYA/ > live.html
-grep -o 'x.com/[A-Za-z0-9_]*/status/' live.html | wc -l   # = 投稿件数
-grep -o '抜粋' live.html | wc -l
-grep -o 'DAY [0-9]' live.html | sort -u
-grep -c '掲載方針' live.html; grep -c 'Hamaboh/-MOD_SHIBUYA/issues' live.html
-```
+
+`links` は投稿件数＋1〜2（全文掲載された投稿の本文中に含まれる `x.com/.../status/` 文字列の分）になる。
 
 ## 掲載方針（厳守）
 
