@@ -99,7 +99,7 @@ footer a{color:var(--k)}
     });
     topics.forEach(t => { (tByDay[t.day] = tByDay[t.day] || []).push(t); });
 
-    const OFF = new Set(['_RAY_world','__yuuaself__','moonseamao','tsumugi_3510','harune__yuki','melonchan0924','kinopo_idol','mico_kinopo','Oaiko_info','ikeshibu_tokyo','wpp_ikebe','MasahiroTOBITA','yuta_hoshi','wozniaktokyo','kazuminamba','tottemogenkiman','teradann','rin_utero','pupa_info','ami_pupa','yuino_pupa','boromaru_staff','shiawase_ito','borotchi','kozue_BRGH','uno_BRGH','BRGHead','kemta','nancy_jpn','Yava_kouteca5','ktcgf_jpn','fumiki_ymgch','hibi_undrcrrnt','apes_band','pudelhunds03','tbt_hn','yotsumototakuya','sotaro_ishida','schoollabel','masasa1to','nrn_sleep_zzz','kagjun','Total_Feedback','Gday_official','NaNoMoRaL_info','pupa11music','shinobu_shami','tower_shinjuku','shingo_fujitani','shinobu_clg','Drawry0920','taruto_pupa']);
+    const OFF = new Set(['_RAY_world','__yuuaself__','moonseamao','tsumugi_3510','harune__yuki','melonchan0924','kinopo_idol','mico_kinopo','Oaiko_info','ikeshibu_tokyo','wpp_ikebe','MasahiroTOBITA','yuta_hoshi','wozniaktokyo','kazuminamba','tottemogenkiman','teradann','rin_utero','pupa_info','ami_pupa','yuino_pupa','boromaru_staff','shiawase_ito','borotchi','kozue_BRGH','uno_BRGH','BRGHead','kemta','nancy_jpn','Yava_kouteca5','ktcgf_jpn','fumiki_ymgch','hibi_undrcrrnt','apes_band','pudelhunds03','tbt_hn','yotsumototakuya','sotaro_ishida','schoollabel','masasa1to','nrn_sleep_zzz','kagjun','Total_Feedback','Gday_official','NaNoMoRaL_info','pupa11music','shinobu_shami','tower_shinjuku','shingo_fujitani','shinobu_clg','Drawry0920','taruto_pupa','NerdNeko1']);
     const isOff = p => OFF.has(String(p.h || '').slice(1));
     const LIM = 110, CUT = 80;
     const body = p => { const t = String(p.x || '').trim();
@@ -161,7 +161,7 @@ footer a{color:var(--k)}
       '</div><p class="note">※このページはファンによる非公式のまとめです。最新・正確な情報は主催者およびRAY公式の発信をご確認ください。</p>' + POLICY + '</div>' +
       '<nav class="nav"><div class="wrap nav-in">' + nav + '</div></nav><main class="wrap">' + secs + '</main>' +
       '<footer><div class="wrap"><p class="ft">#MOD_SHIBUYA</p><p>Xハッシュタグ <strong>#MOD_SHIBUYA</strong> の公開投稿を収集して生成した非公式アーカイブ。</p>' +
-      '<p>収集タイミング：毎日 18:00 / 21:00 / 24:00 / 09:00（JST）｜収集終了：2026年9月14日(月) 09:00</p>' +
+      '<p>収集タイミング：毎日 09:00 / 18:00 / 24:00（JST）｜収集終了：2026年9月14日(月) 09:00</p>' +
       '<p>最終更新：' + U + ' JST ／ 収集済み ' + C + ' 投稿' + (meta.coverage ? '（収集範囲：' + esc(meta.coverage) + '）' : '') + '</p>' +
       '<p><strong>掲載の削除について</strong>：ご自身の投稿の掲載を希望されない場合は、<a href="https://github.com/Hamaboh/-MOD_SHIBUYA/issues" target="_blank" rel="noopener">GitHubのIssue</a>よりご連絡ください。確認のうえ速やかに削除します。</p>' +
       '<p>出典：各投稿のリンク先（X）、<a href="https://skream.jp/news/2026/08/ray_mod_shibuya.php" target="_blank" rel="noopener">Skream!</a>、<a href="https://www.ikebe-gakki.com/blog/202609-mod-shibuya/" target="_blank" rel="noopener">イケベ楽器店</a></p></div></footer>\n</body>\n</html>';
