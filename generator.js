@@ -141,6 +141,7 @@ footer a{color:var(--k)}
     const U = meta.updated, C = items.length;
     return '<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="utf-8">\n' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">\n<meta http-equiv="Pragma" content="no-cache">\n<meta http-equiv="Expires" content="0">\n' +
       '<title>#MOD_SHIBUYA 発生記録 ｜ RAY presents</title>\n' +
       '<meta name="description" content="アイドルグループRAY主催のカルチャー・イベント「#MOD_SHIBUYA」（9/8-14 OPENBASE SHIBUYA）で何が起きているかを、Xの投稿から時系列でまとめた非公式アーカイブ。">\n' +
       '<meta property="og:title" content="#MOD_SHIBUYA 発生記録">\n' +
@@ -164,7 +165,8 @@ footer a{color:var(--k)}
       '<p>収集タイミング：毎日 09:00 / 18:00 / 24:00（JST）｜収集終了：2026年9月14日(月) 09:00</p>' +
       '<p>最終更新：' + U + ' JST ／ 収集済み ' + C + ' 投稿' + (meta.coverage ? '（収集範囲：' + esc(meta.coverage) + '）' : '') + '</p>' +
       '<p><strong>掲載の削除について</strong>：ご自身の投稿の掲載を希望されない場合は、<a href="https://github.com/Hamaboh/-MOD_SHIBUYA/issues" target="_blank" rel="noopener">GitHubのIssue</a>よりご連絡ください。確認のうえ速やかに削除します。</p>' +
-      '<p>出典：各投稿のリンク先（X）、<a href="https://skream.jp/news/2026/08/ray_mod_shibuya.php" target="_blank" rel="noopener">Skream!</a>、<a href="https://www.ikebe-gakki.com/blog/202609-mod-shibuya/" target="_blank" rel="noopener">イケベ楽器店</a></p></div></footer>\n</body>\n</html>';
+      '<p>出典：各投稿のリンク先（X）、<a href="https://skream.jp/news/2026/08/ray_mod_shibuya.php" target="_blank" rel="noopener">Skream!</a>、<a href="https://www.ikebe-gakki.com/blog/202609-mod-shibuya/" target="_blank" rel="noopener">イケベ楽器店</a></p></div></footer>\n' +
+      '<script>(function(){var CUR=' + JSON.stringify(U) + ';var KEY="mod_shibuya_v";try{if(new URLSearchParams(location.search).get("v")===CUR){history.replaceState(null,"",location.pathname+location.hash);}}catch(e){}function chk(){try{fetch("meta.json?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(m){if(!m||!m.updated||m.updated===CUR)return;var d=null;try{d=sessionStorage.getItem(KEY);}catch(e){}if(d===m.updated)return;try{sessionStorage.setItem(KEY,m.updated);}catch(e){}location.replace(location.pathname+"?v="+encodeURIComponent(m.updated));})["catch"](function(){});}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk();});})();<\/script>\n</body>\n</html>';
   }
 
   root.MOD = { generate: generate, esc: esc, rich: rich, jst: jst, DAYS: DAYS, DL: DL, CSS: CSS };
